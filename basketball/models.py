@@ -1,11 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class League(models.Model):
     name = models.CharField(max_length=50, unique=True)
     is_active = models.BooleanField(default=True)
+    max_number_teams = models.PositiveSmallIntegerField(default=8, validators=[MinValueValidator(2)])
+    min_number_players_per_team = models.PositiveSmallIntegerField(default=5, validators=[MinValueValidator(5)])
 
     date_created = models.DateTimeField(auto_now_add=True)
     signup_allowed = models.BooleanField(default=True)

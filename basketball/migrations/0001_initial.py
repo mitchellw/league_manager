@@ -19,6 +19,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(unique=True, max_length=50)),
                 ('is_active', models.BooleanField(default=True)),
+                ('max_number_teams', models.PositiveSmallIntegerField(default=4, validators=[django.core.validators.MinValueValidator(2)])),
+                ('min_number_players_per_team', models.PositiveSmallIntegerField(default=5, validators=[django.core.validators.MinValueValidator(5)])),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
                 ('signup_allowed', models.BooleanField(default=True)),
             ],
