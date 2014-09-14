@@ -1,9 +1,13 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 
+from basketball.models import Player, League, Team, LeagueMembership
+
 
 def leagues(request):
-    return HttpResponse('Not implemented yet.')
+    league_list = League.objects.all()
+    context = {'league_list': league_list}
+    return render(request, 'basketball/index.html', context)
 
 
 def create_league(request):
