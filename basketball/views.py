@@ -45,7 +45,16 @@ def league_info(request, league_id):
 
 @user_passes_test(is_superuser)
 def edit_league_info(request, league_id):
-    return HttpResponse('Not implemented yet.')
+    league = get_object_or_404(League, pk=league_id)
+    league_form = LeagueForm(instance=league)
+    if request.method == 'POST':
+        league_form = LeagueForm(request.POST, instance=league)
+        if league_form.is_valid():
+            league = league_form.save()
+            return HttpResponseRedirect(reverse('basketball:league-info', args=[league.pk]))
+
+    context = {'league_form': league_form, 'league': league}
+    return render(request, 'basketball/edit_league.html', context)
 
 
 @user_passes_test(is_superuser)
@@ -55,7 +64,13 @@ def draft_league(request, league_id):
 
 @user_passes_test(is_superuser)
 def delete_league(request, league_id):
-    return HttpResponse('Not implemented yet.')
+    league = get_object_or_404(League, pk=league_id)
+    if request.method == 'POST':
+        league.delete()
+        return HttpResponseRedirect(reverse('basketball:leagues'))
+
+    context = {'league': league}
+    return render(request, 'basketball/delete_league.html', context)
 
 
 def team_info(request, team_id):

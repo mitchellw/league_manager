@@ -15,6 +15,14 @@
 
 {% block content %}
   <h1>{{ league.name }}</h1>
+  {% if user.is_superuser %}
+    <div>
+      <a href="{% url 'basketball:draft-league' league.pk %}"><button type="button" class="btn">Auto-Draft</button></a>
+      <a href="{% url 'basketball:edit-league-info' league.pk %}"><button type="button" class="btn btn-warning">Edit</button></a>
+      <a href="{% url 'basketball:delete-league' league.pk %}"><button type="button" class="btn btn-danger">Delete</button></a>
+    </div>
+  {% endif %}
+
   {% if team_list %}
     <ul>
       {% for team in league.team_set %}
@@ -22,6 +30,6 @@
       {% endfor %}
     </ul>
   {% else %}
-    <p>No teams exist in that league yet.</p>
+    <p>No teams exist in this league yet.</p>
   {% endif %}
 {% endblock content %}

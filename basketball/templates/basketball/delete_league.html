@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Basketball League{% endblock %}
+
+{% block breadcrumb-page %}
+  <li><a href="{% url 'basketball:leagues' %}">Basketball</a></li>
+  <li class="active">Delete League</li>
+{% endblock breadcrumb-page %}
+
+{% block content %}
+  <h1>Delete League</h1>
+  {% if league %}
+    <p>Are you sure you want to delete the league named "{{ league.name }}" and all teams associated with it?</p>
+    <div>
+      <form class="form-inline" method="post" action="{% url 'basketball:delete-league' league.pk %}">
+        {% csrf_token %}
+        <a class="btn btn-default" href="{% url 'basketball:league-info' league.pk %}">No</a>
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+  {% else %}
+    <p>League not found.</p>
+  {% endif %}
+{% endblock content %}
