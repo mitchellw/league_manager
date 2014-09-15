@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block breadcrumb-page %}<li class="active">Login</li>{% endblock breadcrumb-page %}
+
+{% block content %}
+  <h1>Login</h1>
+  {% if error %}
+    <div class="alert-warning">Either the username or password supplied was incorrect. Please try again.</div>
+  {% endif %}
+  <form method="post" action="{% url 'basketball:login' %}" role="form">
+    {% csrf_token %}
+    <div class="form-group">
+      {% if next %}
+      <input type="hidden" name="next" value="{{ next }}"/>
+      {% endif %}
+      <label for="username">Username/Email address</label>
+      <input type="text" class="form-control" name="username" placeholder="username/email"/>
+      <label for="password">Password</label>
+      <input type="password" class="form-control" name="password" placeholder="password"/>
+    </div>
+    <button type="submit" class="btn btn-default">Login</button>
+  </form>
+{% endblock content %}
