@@ -2,3 +2,4 @@
 **sudo docker run -d -p 8000:8000 mitchellw/league_manager
 *Superuser already created as username:thecommish, password:commishalicious
 *Everything can be done from the website
+**Probably want to start by signing in as thecommish and creating some leagues, then move on to registering users, then drafting a league or two, editing player profiles while logged in as that player or the commissioner, and editing/deleting leagues.
