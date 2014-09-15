@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User, BaseUserManager
@@ -30,25 +30,17 @@ def create_league(request):
         league_form = LeagueForm(request.POST)
         if league_form.is_valid():
             league = league_form.save()
-            return HttpResponseRedirect(reverse('basketball:league-created', args=[league.pk]))
+            return HttpResponseRedirect(reverse('basketball:league-info', args=[league.pk]))
         else:
             context = {'league_form': league_form}
 
     return render(request, 'basketball/create_league.html', context)
 
 
-@user_passes_test(is_superuser)
-def league_created(request, league_id):
-    try:
-        league = League.objects.get(pk=league_id)
-    except League.DoesNotExist:
-        league = None
-    context = {'league': league}
-    return render(request, 'basketball/league_created.html', context)
-
-
 def league_info(request, league_id):
-    return HttpResponse('Not implemented yet.')
+    league = get_object_or_404(League, pk=league_id)
+    context = {'league': league}
+    return render(request, 'basketball/league.html', context)
 
 
 def edit_league_info(request, league_id):

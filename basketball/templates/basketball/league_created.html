@@ -2,7 +2,10 @@
 
 {% block title %}Basketball League Created{% endblock %}
 
-{% block breadcrumb-page %}<li><a href="{% url 'basketball:leagues' %}">Basketball</a></li><li class="active">League Created</li>{% endblock breadcrumb-page %}
+{% block breadcrumb-page %}
+  <li><a href="{% url 'basketball:leagues' %}">Basketball</a></li>
+  <li class="active">League Created</li>
+{% endblock breadcrumb-page %}
 
 {% block content %}
   <h1>League Created</h1>

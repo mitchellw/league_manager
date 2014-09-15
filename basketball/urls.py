@@ -7,8 +7,6 @@ urlpatterns = patterns('',
                        url(r'^$', views.leagues, name='leagues'),
                        # Commissioner only - /basketball/leagues/create
                        url(r'^leagues/create$', views.create_league, name='create-league'),
-                       # Commissioner only - /basketball/leagues/created
-                       url(r'^leagues/created/(?P<league_id>\d+)/$', views.league_created, name='league-created'),
                        # /basketball/leagues/1/
                        url(r'^leagues/(?P<league_id>\d+)/$', views.league_info, name='league-info'),
                        # Commissioner only - /basketball/leagues/1/edit
