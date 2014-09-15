@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Commissioner Dashboard{% endblock %}
+
+{% block breadcrumb-page %}
+  <li><a href="{% url 'basketball:leagues' %}">Basketball</a></li>
+  <li class="active">Commissioner Dashboard</li>
+{% endblock breadcrumb-page %}
+
+{% block content %}
+  <h1>Commissioner Dashboard</h1>
+  <ul>
+    <li><a href="{% url 'basketball:create-league' %}">Create new league</a></li>
+  </ul>
+{% endblock content %}

@@ -111,4 +111,4 @@ def logout(request):
 
 @user_passes_test(is_superuser)
 def commissioner_dashboard(request):
-    return HttpResponse('Not implemented yet.')
+    return render(request, 'basketball/commissioner.html')
