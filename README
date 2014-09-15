@@ -1,0 +1,4 @@
+*Deploy the docker image from mitchellw/league_manager
+**sudo docker run -d -p 8000:8000 mitchellw/league_manager
+*Superuser already created as username:thecommish, password:commishalicious
+*Everything can be done from the website

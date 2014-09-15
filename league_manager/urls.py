@@ -6,5 +6,7 @@ urlpatterns = patterns('',
                        # root '/'
                        url(r'^$', views.leagues, name='index'),
                        # include basketball app's urls
-                       url(r'^basketball/', include('basketball.urls', namespace='basketball'))
+                       url(r'^basketball/', include('basketball.urls', namespace='basketball')),
+                       # include api app's urls
+                       url(r'^api/', include('api.urls', namespace='api'))
                        )
