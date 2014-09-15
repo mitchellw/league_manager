@@ -1,3 +1,5 @@
+from random import shuffle
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
@@ -59,7 +61,51 @@ def edit_league_info(request, league_id):
 
 @user_passes_test(is_superuser)
 def draft_league(request, league_id):
-    return HttpResponse('Not implemented yet.')
+    league = get_object_or_404(League, pk=league_id)
+    context = {'league': league}
+    if request.method == 'POST':
+        result = enact_draft(league)
+        if result:
+            return result
+        context['error'] = True
+
+    return render(request, 'basketball/draft_league.html', context)
+
+
+def enact_draft(league):
+    # Idea is to create a random permutation of players in the league,
+    # then assign them to teams, giving the first few teams at most 1 extra player,
+    # depending on the number of players registered and minimum number of players per team.
+    players = list(league.player_set.all())
+    shuffle(players)
+    num_players = len(players)
+    max_num_teams = league.max_number_teams
+    num_teams_possible = num_players / league.min_number_players_per_team
+    if num_teams_possible >= max_num_teams:
+        num_teams = max_num_teams
+    elif num_teams_possible >= 2:
+        num_teams = num_teams_possible
+    else:
+        return None
+
+    num_players_per_equal_team = num_players / num_teams
+    num_teams_unequal = num_players % num_teams
+    for i in xrange(0, num_teams):
+        team_name = 'Team %d' % (i+1)
+        team = Team.objects.create(name=team_name, league=league)
+        team.save()
+
+        if i < num_teams_unequal:
+            start = i*num_players_per_equal_team + i
+            end = start + num_players_per_equal_team + 1
+        else:
+            start = i*num_players_per_equal_team + num_teams_unequal
+            end = start + num_players_per_equal_team
+
+        for player in players[start:end]:
+            player.assign_to_team_in_league(league, team)
+
+    return HttpResponseRedirect(reverse('basketball:league-info', args=[league.pk]))
 
 
 @user_passes_test(is_superuser)

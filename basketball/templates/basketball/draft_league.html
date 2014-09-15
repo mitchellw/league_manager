@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Draft Basketball League{% endblock %}
+
+{% block breadcrumb-page %}
+  <li><a href="{% url 'basketball:leagues' %}">Basketball</a></li>
+  <li class="active">Draft League</li>
+{% endblock breadcrumb-page %}
+
+{% block content %}
+  <h1>Draft League</h1>
+  {% if league %}
+    {% if error %}
+      <div class="alert-warning">There was a problem drafting, there are only {{ league.player_set.count }}
+        players registered for this league, but that is not enough to create a league with at least 2 teams of
+        {{ league.min_number_players_per_team }}!</div>
+    {% endif %}
+    <p>Are you sure you want to auto-draft the league named "{{ league.name }}"?
+      It might be a good idea to first close registration, to lessen any confusion!</p>
+    <div>
+      <form class="form-inline" method="post" action="{% url 'basketball:draft-league' league.pk %}">
+        {% csrf_token %}
+        <a class="btn btn-default" href="{% url 'basketball:league-info' league.pk %}">No</a>
+        <button type="submit" class="btn btn-success">Draft</button>
+      </form>
+    </div>
+  {% else %}
+    <p>League not found.</p>
+  {% endif %}
+{% endblock content %}
