@@ -12,7 +12,9 @@
   {% if league_list %}
     <ul>
       {% for league in league_list %}
-        <li><a href="{% url 'basketball:league-info' league.pk %}">{{ league.name }}</a></li>
+        {% if league.is_active %}
+          <li><a href="{% url 'basketball:league-info' league.pk %}">{{ league.name }}</a></li>
+        {% endif %}
       {% endfor %}
     </ul>
   {% else %}
