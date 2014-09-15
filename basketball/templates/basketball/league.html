@@ -14,7 +14,7 @@
 {% endblock breadcrumb-page %}
 
 {% block content %}
-  <h1>Teams in league "{{ league.name }}"</h1>
+  <h1>{{ league.name }}</h1>
   {% if team_list %}
     <ul>
       {% for team in league.team_set %}
