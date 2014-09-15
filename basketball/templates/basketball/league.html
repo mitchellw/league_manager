@@ -10,11 +10,14 @@
 
 {% block breadcrumb-page %}
   <li><a href="{% url 'basketball:leagues' %}">Basketball</a></li>
-  <li class="active">Leagues</li>
+  <li class="active">League</li>
 {% endblock breadcrumb-page %}
 
 {% block content %}
-  <h1>{{ league.name }}</h1>
+  {% if league %}
+    <h1>{{ league.name }}</h1>
+  {% endif %}
+
   {% if user.is_superuser %}
     <div>
       <a href="{% url 'basketball:draft-league' league.pk %}"><button type="button" class="btn">Auto-Draft</button></a>
@@ -23,9 +26,9 @@
     </div>
   {% endif %}
 
-  {% if team_list %}
+  {% if league.team_set.count > 0 %}
     <ul>
-      {% for team in league.team_set %}
+      {% for team in league.team_set.all %}
         <li><a href="{% url 'basketball:team-info' team.pk %}">{{ team.name }}</a></li>
       {% endfor %}
     </ul>

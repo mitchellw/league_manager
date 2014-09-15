@@ -70,7 +70,7 @@
             {% if user.is_superuser %}
               {% url 'basketball:commissioner-dashboard' %}
             {% else %}
-              {% url 'basketball:edit-player-info' user.player.pk %}
+              {% url 'basketball:player-info' user.player.pk %}
             {% endif %}">
             Logged in as {{ user.get_username }}</a></li>
           <li><a href="{% url 'basketball:logout' %}">Logout</a></li>

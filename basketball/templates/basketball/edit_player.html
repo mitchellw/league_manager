@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
 
-{% block title %}Edit Basketball League{% endblock %}
+{% block title %}Edit Player Info{% endblock %}
 
 {% block breadcrumb-page %}
   <li><a href="{% url 'basketball:leagues' %}">Basketball</a></li>
-  <li class="active">Edit League</li>
+  <li class="active">Edit Player Info</li>
 {% endblock breadcrumb-page %}
 
 {% block content %}
-  <h1>Edit League</h1>
-  {% if league_form and league %}
-    <form method="post" action="{% url 'basketball:edit-league-info' league.pk %}" role="form">
+  <h1>Edit Player Info</h1>
+  {% if player_form and player %}
+    <form method="post" action="{% url 'basketball:edit-player-info' player.pk %}" role="form">
       {% csrf_token %}
       <div class="form-group">
-        {{ league_form.as_p }}
+        {{ player_form.as_p }}
       </div>
       <button type="submit" class="btn btn-default">Save</button>
     </form>

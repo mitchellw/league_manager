@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {% if player %}
+    {{ player.name }}
+  {% else %}
+    Player Not Found
+  {% endif %}
+{% endblock %}
+
+{% block breadcrumb-page %}
+  <li><a href="{% url 'basketball:leagues' %}">Basketball</a></li>
+  <li class="active">Player</li>
+{% endblock breadcrumb-page %}
+
+{% block content %}
+  {% if player %}
+    <h1>{{ player.name }}</h1>
+    {% if user.is_superuser or user.player and user.player.pk == player.pk %}
+      <div>
+        <a href="{% url 'basketball:edit-player-info' player.pk %}"><button type="button" class="btn btn-warning">Edit</button></a>
+      </div>
+    {% endif %}
+    <ul>
+      <li>Age: {{ player.age }}</li>
+      <li>Position: {{ player.get_position_display }}</li>
+      <li>
+        {% if player.leaguemembership_set.count > 0 %}
+          Teams:
+          <ul>
+            {% for membership in player.leaguemembership_set.all %}
+              <li>
+              {% if membership.team %}
+                {{ membership.team.name }}
+              {% else %}
+                Waiting to placed on a team
+              {% endif %}
+              in the {{ membership.league.name }} league
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          {{ player.name }} doesn't seem to be on any teams or signed up for any leagues.
+        {% endif %}
+      </li>
+      <li>About {{ player.name }}:  {{ player.about }}</li>
+    </ul>
+  {% else %}
+    <p>No players are on this team right now.</p>
+  {% endif %}
+{% endblock content %}

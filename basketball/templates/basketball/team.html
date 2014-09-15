@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {% if team %}
+    {{ team.name }}
+  {% else %}
+    Team Not Found
+  {% endif %}
+{% endblock %}
+
+{% block breadcrumb-page %}
+  <li><a href="{% url 'basketball:leagues' %}">Basketball</a></li>
+  {% if team %}
+    <li><a href="{% url 'basketball:league-info' team.league.pk %}">{{ team.league.name }}</a></li>
+  {% endif %}
+  <li class="active">Team</li>
+{% endblock breadcrumb-page %}
+
+{% block content %}
+  {% if team %}
+    <h1>{{ team.name }}</h1>
+  {% endif %}
+
+  {% if team.leaguemembership_set.count > 0 %}
+    <ul>
+      {% for membership in team.leaguemembership_set.all %}
+        <li><a href="{% url 'basketball:player-info' membership.player.pk %}">{{ membership.player.name }}</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No players are on this team right now.</p>
+  {% endif %}
+{% endblock content %}

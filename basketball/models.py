@@ -38,7 +38,8 @@ class Player(models.Model):
                                 default=GUARD)
     name = models.CharField(max_length=50)
     age = models.PositiveSmallIntegerField(validators=[MaxValueValidator(100)])
-    leagues = models.ManyToManyField(League, through='LeagueMembership')
+    leagues = models.ManyToManyField(League, through='LeagueMembership',
+                                     limit_choices_to={'is_active': True, 'signup_allowed': True})
     user = models.OneToOneField(User)
 
     # Not required

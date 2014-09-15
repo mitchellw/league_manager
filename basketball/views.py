@@ -9,8 +9,8 @@ from django.contrib.auth.models import User, BaseUserManager
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 
-from basketball.models import Player, League, Team, LeagueMembership
-from basketball.forms import LeagueForm
+from basketball.models import Player, League, Team
+from basketball.forms import LeagueForm, PlayerForm, UserForm
 
 
 def is_superuser(user):
@@ -90,6 +90,7 @@ def enact_draft(league):
 
     num_players_per_equal_team = num_players / num_teams
     num_teams_unequal = num_players % num_teams
+    Team.objects.filter(league=league).delete()
     for i in xrange(0, num_teams):
         team_name = 'Team %d' % (i+1)
         team = Team.objects.create(name=team_name, league=league)
@@ -120,19 +121,63 @@ def delete_league(request, league_id):
 
 
 def team_info(request, team_id):
-    return HttpResponse('Not implemented yet.')
+    team = get_object_or_404(Team, pk=team_id)
+    context = {'team': team}
+    return render(request, 'basketball/team.html', context)
 
 
 def player_info(request, player_id):
-    return HttpResponse('Not implemented yet.')
+    player = get_object_or_404(Player, pk=player_id)
+    context = {'player': player}
+    return render(request, 'basketball/player.html', context)
 
 
 def edit_player_info(request, player_id):
-    return HttpResponse('Not implemented yet.')
+    player = get_object_or_404(Player, pk=player_id)
+    user = request.user
+
+    if not user.is_superuser and (not user.player or user.player.pk != player.pk):
+        return HttpResponse('Unauthorized', status=401)
+
+    player_form = PlayerForm(instance=player)
+    if request.method == 'POST':
+        player_form = PlayerForm(request.POST, instance=player)
+        if player_form.is_valid():
+            player = player_form.save(commit=False)
+            player.leaguemembership_set.filter(league__signup_allowed=True, league__is_active=True).delete()
+            for league_id in request.POST.getlist('leagues'):
+                league = League.objects.get(pk=league_id)
+                player.register_for_league(league)
+            player.save()
+
+            return HttpResponseRedirect(reverse('basketball:player-info', args=[player.pk]))
+
+    context = {'player_form': player_form, 'player': player}
+    return render(request, 'basketball/edit_player.html', context)
 
 
 def register(request):
-    return HttpResponse('Not implemented yet.')
+    if request.method == 'GET':
+        player_form = PlayerForm()
+        user_form = UserForm()
+        context = {'player_form': player_form, 'user_form': user_form}
+    elif request.method == 'POST':
+        player_form = PlayerForm(request.POST)
+        user_form = UserForm(request.POST)
+        if player_form.is_valid() and user_form.is_valid():
+            user = user_form.save()
+            player = Player.objects.create(name=player_form.cleaned_data['name'], age=player_form.cleaned_data['age'],
+                                           position=player_form.cleaned_data['position'],
+                                           about=player_form.cleaned_data['about'], user=user)
+            for league_id in request.POST.getlist('leagues'):
+                league = League.objects.get(pk=league_id)
+                player.register_for_league(league)
+
+            return HttpResponseRedirect(reverse('basketball:login'))
+        else:
+            context = {'player_form': player_form, 'user_form': user_form}
+
+    return render(request, 'basketball/register.html', context)
 
 
 def login(request):
