@@ -43,14 +43,17 @@ def league_info(request, league_id):
     return render(request, 'basketball/league.html', context)
 
 
+@user_passes_test(is_superuser)
 def edit_league_info(request, league_id):
     return HttpResponse('Not implemented yet.')
 
 
+@user_passes_test(is_superuser)
 def draft_league(request, league_id):
     return HttpResponse('Not implemented yet.')
 
 
+@user_passes_test(is_superuser)
 def delete_league(request, league_id):
     return HttpResponse('Not implemented yet.')
 
@@ -106,5 +109,6 @@ def logout(request):
     return HttpResponseRedirect('/basketball/')
 
 
+@user_passes_test(is_superuser)
 def commissioner_dashboard(request):
     return HttpResponse('Not implemented yet.')
